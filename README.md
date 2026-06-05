@@ -98,17 +98,20 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 **Quality**
 - Server unit tests (vitest) for the task service and request validation — CRUD operations, search, ordering, cross-user isolation, and malformed-payload handling
 - Server integration tests (supertest) driving the real Express app end-to-end — login, the authentication guard, and the full authenticated task lifecycle (asserting 200/201/204/400/404 responses)
-- Client unit tests (vitest) for the task list component — initial load, search, add, update, delete, and drag-and-drop reordering
+- Client unit tests (vitest) covering the auth and task services, the route guard, and the HTTP interceptor (token attachment, 401-triggered logout, URL/param building), plus all four components (login, task list, task add dialog, task edit) — rendering, password toggle, search, and CRUD/reorder behaviour
 - Code coverage reporting via v8 (~94% statements on the server), run with `npm run test:server:coverage`
 - TypeScript strict mode on both server and client
 
 ### Given More Time
 
-- User registration endpoint + sign-up screen
-- Broader client unit tests — the auth service, route guard, HTTP interceptor, and remaining components (the task list component is already covered)
-- End-to-end tests (Playwright or Cypress) covering the full login → CRUD → reorder flow
-- Task due dates, labels/tags, and priority labels
-- Pagination or virtual scrolling for large task lists
+Rough effort estimates for what I'd tackle next:
+
+- **User registration endpoint + sign-up screen** (~2–3 hrs) — the backend currently seeds a test user and supports login only.
+- **End-to-end tests** (~4–6 hrs) — Playwright or Cypress covering the full login → CRUD → reorder flow in a real browser.
+- **Deeper client component tests** (~2–3 hrs) — drive the signal-form submission and server-error paths in the login/add/edit forms (current client tests cover services, the guard, the interceptor, and component rendering/logic).
+- **Client-side coverage reporting** (~1 hr) — wire a coverage reporter into the Angular vitest runner to match the server's.
+- **Task due dates, labels/tags, and priority labels** (~3–4 hrs).
+- **Pagination or virtual scrolling for large task lists** (~2–3 hrs).
 
 ### Given More Time — Robustness Improvements
 

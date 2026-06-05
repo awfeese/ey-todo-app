@@ -14,13 +14,16 @@ npm run dev:server
 # Start the frontend (runs on port 4200, proxies /api to backend)
 npm run dev:client
 
-# Run backend tests only (vitest)
+# Run backend tests only (vitest, unit + integration)
 npm run test:server
+
+# Run backend tests with a coverage report (v8)
+npm run test:server:coverage
 
 # Run a single backend test file
 cd server && npx vitest run src/services/task-service.spec.ts
 
-# Run frontend tests (Karma, headless)
+# Run frontend tests (vitest, headless)
 npm run test:client
 
 # Run all tests
@@ -37,7 +40,7 @@ This is a monorepo with a shared root `package.json`. The backend (`server/`) an
 
 ### Backend (`server/src/`)
 
-Express 5 + TypeScript REST API. No ORM — raw SQL via Node's built-in `node:sqlite` (`DatabaseSync`). Each request gets a new DB connection via `connectDB()` in `config/database.ts`.
+Express 5 + TypeScript REST API. No ORM — raw SQL via Node's built-in `node:sqlite` (`DatabaseSync`). `connectDB()` in `config/database.ts` opens a connection; each service module calls it once at import time and reuses that single connection for the process lifetime.
 
 **Request lifecycle:** `app.ts` mounts all routes under `/api` → `routes/index.ts` aggregates sub-routers → controllers call services → services talk to SQLite directly.
 
@@ -45,7 +48,9 @@ Express 5 + TypeScript REST API. No ORM — raw SQL via Node's built-in `node:sq
 
 **Response helpers** (`utils/response.ts`): use `success`, `created`, `badRequest`, `notFound`, `unauthorized`, `serverError` instead of calling `res.status(...).json(...)` directly.
 
-**Config** (`config/index.ts`): single export object covering port, DB path, JWT settings, and CORS. DB is stored at `server/app.db` (gitignored).
+**Config** (`config/index.ts`): single export object covering port, log level, DB path, JWT settings, and CORS. DB is stored at `server/app.db` (gitignored).
+
+**Logging** (`config/logger.ts`): structured logging via `pino`. Use `logger.info` / `logger.error({ err }, '...')` instead of `console.*` — production code must have no debug logging.
 
 ### Frontend (`client/src/`)
 

@@ -48,13 +48,16 @@ Open [http://localhost:4200](http://localhost:4200) in a browser. The dev server
 ## Running Tests
 
 ```bash
-# Server unit tests (vitest)
+# Server tests — unit + integration (vitest)
 npm run test:server
 
-# Client tests (Karma)
+# Server tests with a coverage report (v8)
+npm run test:server:coverage
+
+# Client tests (vitest)
 npm run test:client
 
-# Both
+# Server + client
 npm test
 ```
 
@@ -93,13 +96,16 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 - Fully responsive layout
 
 **Quality**
-- Unit tests for the backend task service (18 tests covering all CRUD operations, search, ordering, and cross-user isolation)
+- Server unit tests (vitest) for the task service and request validation — CRUD operations, search, ordering, cross-user isolation, and malformed-payload handling
+- Server integration tests (supertest) driving the real Express app end-to-end — login, the authentication guard, and the full authenticated task lifecycle (asserting 200/201/204/400/404 responses)
+- Client unit tests (vitest) for the task list component — initial load, search, add, update, delete, and drag-and-drop reordering
+- Code coverage reporting via v8 (~94% statements on the server), run with `npm run test:server:coverage`
 - TypeScript strict mode on both server and client
 
 ### Given More Time
 
 - User registration endpoint + sign-up screen
-- Client unit tests for services, guards, interceptor, and components
+- Broader client unit tests — the auth service, route guard, HTTP interceptor, and remaining components (the task list component is already covered)
 - End-to-end tests (Playwright or Cypress) covering the full login → CRUD → reorder flow
 - Task due dates, labels/tags, and priority labels
 - Pagination or virtual scrolling for large task lists

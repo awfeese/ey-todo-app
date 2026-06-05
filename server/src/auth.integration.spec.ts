@@ -162,4 +162,9 @@ describe('authenticated task lifecycle', () => {
         const res = await auth(request(app).post('/api/tasks/order')).send([99999]);
         expect(res.status).toBe(404);
     });
+
+    it('returns 400 when reordering with a non-array payload', async () => {
+        const res = await auth(request(app).post('/api/tasks/order')).send({ not: 'an array' });
+        expect(res.status).toBe(400);
+    });
 });

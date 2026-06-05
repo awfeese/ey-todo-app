@@ -24,7 +24,7 @@ export class TaskService extends BaseService {
     }
 
     public orderTasks(request: number[]) {
-        return this._http.post<ApiResponse<Task[]>>(`${this._url}/order`, request).pipe(
+        return this._http.put<ApiResponse<Task[]>>(`${this._url}/order`, request).pipe(
             tap(() => this._toastMessage('Successfully updated the order of your tasks!')),
             this._handleError()
         );

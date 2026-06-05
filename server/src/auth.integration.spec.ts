@@ -173,12 +173,12 @@ describe('authenticated task lifecycle', () => {
     });
 
     it('returns 404 when reordering with an unknown task id', async () => {
-        const res = await auth(request(app).post('/api/tasks/order')).send([99999]);
+        const res = await auth(request(app).put('/api/tasks/order')).send([99999]);
         expect(res.status).toBe(404);
     });
 
     it('returns 400 when reordering with a non-array payload', async () => {
-        const res = await auth(request(app).post('/api/tasks/order')).send({ not: 'an array' });
+        const res = await auth(request(app).put('/api/tasks/order')).send({ not: 'an array' });
         expect(res.status).toBe(400);
     });
 });

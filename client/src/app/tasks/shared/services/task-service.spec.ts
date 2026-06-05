@@ -73,10 +73,10 @@ describe('TaskService', () => {
         expect(result?.data).toBe(true);
     });
 
-    it('orderTasks POSTs the ordered id list to /order', () => {
+    it('orderTasks PUTs the ordered id list to /order', () => {
         service.orderTasks([3, 1, 2]).subscribe();
         const req = httpMock.expectOne(r => r.url.endsWith('/api/tasks/order'));
-        expect(req.request.method).toBe('POST');
+        expect(req.request.method).toBe('PUT');
         expect(req.request.body).toEqual([3, 1, 2]);
         req.flush({ data: [] });
     });

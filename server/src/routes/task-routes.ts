@@ -8,7 +8,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', taskController.getTasks);
-router.post('/order', validateTaskOrder, taskController.orderTasks);
+router.put('/order', validateTaskOrder, taskController.orderTasks);
 router.post('/', validateTask, taskController.addTask);
 router.get('/:id', taskController.getTask);
 router.put('/:id', validateTask, taskController.updateTask);

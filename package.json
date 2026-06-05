@@ -5,6 +5,7 @@
     "packageManager": "npm@10.9.4",
     "scripts": {
         "test:server": "cd server && npx vitest run",
+        "test:server:coverage": "cd server && npx vitest run --coverage",
         "test:client": "cd client && npx ng test --watch=false",
         "test": "npm run test:server && npm run test:client",
         "dev:server": "cd server && npx tsx src/server.ts",
@@ -39,8 +40,11 @@
         "@types/express": "5.0.6",
         "@types/jsonwebtoken": "9.0.10",
         "@types/node": "25.9.1",
+        "@types/supertest": "7.2.0",
+        "@vitest/coverage-v8": "4.1.8",
         "happy-dom": "20.10.1",
         "prettier": "3.8.1",
+        "supertest": "7.2.2",
         "tsx": "4.22.4",
         "typescript": "5.9.2",
         "vitest": "4.1.8"

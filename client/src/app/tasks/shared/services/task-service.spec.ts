@@ -42,10 +42,10 @@ describe('TaskService', () => {
     });
 
     it('addTask POSTs the request body', () => {
-        service.addTask({ task: 'New task' }).subscribe();
+        service.addTask({ task: 'New task', completed: false }).subscribe();
         const req = httpMock.expectOne(r => r.url.endsWith('/api/tasks'));
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ task: 'New task' });
+        expect(req.request.body).toEqual({ task: 'New task', completed: false });
         req.flush({ data: { id: 1, task: 'New task', completed: false, priority: 0 } });
     });
 

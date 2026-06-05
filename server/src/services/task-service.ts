@@ -1,6 +1,6 @@
 import { SQLInputValue } from 'node:sqlite';
 import db from '../config/database';
-import { Task, TaskRequest } from '../models/task';
+import { AddTaskRequest, Task, UpdateTaskRequest } from '../models/task';
 
 const getNextPriority = (userId: number) => {
     const query = db.prepare('SELECT MAX(priority) AS priority FROM tasks WHERE user_id = ?');
@@ -44,7 +44,7 @@ const taskService = {
         }
     },
 
-    addTask: (userId: number, req: TaskRequest): number => {
+    addTask: (userId: number, req: AddTaskRequest): number => {
         const priority = getNextPriority(userId);
         const query = db.prepare(`INSERT INTO tasks (user_id, task, completed, priority)
             VALUES (?,?,?,?)
@@ -61,7 +61,7 @@ const taskService = {
         return result;
     },
 
-    updateTask: (userId: number, id: number, req: TaskRequest): boolean => {
+    updateTask: (userId: number, id: number, req: UpdateTaskRequest): boolean => {
         const query = db.prepare('UPDATE tasks SET task = ?, completed = ? WHERE user_id = ? AND id = ?');
         const result = query.run(req.task, req.completed ? 1 : 0, userId, id);
         return result.changes === 1;

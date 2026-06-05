@@ -5,4 +5,4 @@ export interface Task {
     priority: number;
 }
 
-export type TaskRequest = Required<Pick<Task, 'task'>> & Partial<Pick<Task, 'completed'>>;
+export type TaskRequest = Pick<Task, 'task' | 'completed'>;

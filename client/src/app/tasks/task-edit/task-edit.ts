@@ -2,15 +2,13 @@ import { afterNextRender, ChangeDetectionStrategy, Component, inject, input, lin
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { MaterialModule } from '../../shared';
-import { Task } from '../shared/models';
+import { Task, TaskRequest } from '../shared/models';
 import { TaskService } from '../shared/services';
 import { taskForm } from '../shared/utils';
 
-const EMPTY_TASK: Task = {
-    id: 0,
+const EMPTY_TASK: TaskRequest = {
     task: '',
-    completed: false,
-    priority: 1
+    completed: false
 };
 
 @Component({
@@ -23,7 +21,7 @@ export class TaskEdit {
     private readonly _taskService = inject(TaskService);
 
     readonly task = input.required<Task>();
-    readonly taskModel = linkedSignal({
+    readonly taskModel = linkedSignal<Task, TaskRequest>({
         source: this.task,
         computation: value => value || EMPTY_TASK
     });

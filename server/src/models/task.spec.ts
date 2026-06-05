@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { describe, expect, it, vi } from 'vitest';
-import { validateTask, validateTaskOrder } from './task';
+import { validateTask, validateTaskOrder, validateTaskUpdate } from './task';
 
 function setup(body: unknown) {
     const req = { body } as Request;
@@ -68,25 +68,34 @@ describe('validateTask', () => {
         expect(next).not.toHaveBeenCalled();
     });
 
-    it('accepts a boolean completed flag', () => {
-        for (const completed of [true, false]) {
-            const { req, res, next } = setup({ task: 'Buy milk', completed });
-            validateTask(req, res, next);
-            expect(next).toHaveBeenCalledTimes(1);
-            expect(res.status).not.toHaveBeenCalled();
-        }
-    });
-
     it('accepts a payload without a completed flag', () => {
         const { req, res, next } = setup({ task: 'Buy milk' });
         validateTask(req, res, next);
         expect(next).toHaveBeenCalledTimes(1);
     });
+});
 
-    it('rejects a non-boolean completed flag with 400 instead of coercing it', () => {
+describe('validateTaskUpdate', () => {
+    it('calls next when task and completed are both present', () => {
+        for (const completed of [true, false]) {
+            const { req, res, next } = setup({ task: 'Buy milk', completed });
+            validateTaskUpdate(req, res, next);
+            expect(next).toHaveBeenCalledTimes(1);
+            expect(res.status).not.toHaveBeenCalled();
+        }
+    });
+
+    it('rejects a missing completed flag with 400', () => {
+        const { req, res, next } = setup({ task: 'Buy milk' });
+        validateTaskUpdate(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(next).not.toHaveBeenCalled();
+    });
+
+    it('rejects a non-boolean completed flag with 400', () => {
         for (const completed of ['false', 1, 0, {}, null]) {
             const { req, res, next } = setup({ task: 'Buy milk', completed });
-            validateTask(req, res, next);
+            validateTaskUpdate(req, res, next);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(next).not.toHaveBeenCalled();
         }

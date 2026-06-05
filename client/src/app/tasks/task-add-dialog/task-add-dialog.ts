@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { MaterialModule } from '../../shared';
 import { TaskService } from '../shared/services';
 import { taskForm } from '../shared/utils';
+import { TaskRequest } from '../shared/models';
 
 @Component({
     selector: 'app-task-add-dialog',
@@ -17,7 +18,7 @@ export class TaskAddDialog {
     private readonly _dialogRef = inject(MatDialogRef);
     private readonly _taskService = inject(TaskService);
 
-    readonly taskModel = signal({ task: '' });
+    readonly taskModel = signal<TaskRequest>({ task: '', completed: false });
     readonly taskForm = taskForm(this.taskModel, request => {
         return this._taskService.addTask(request).pipe(
             tap(response => {

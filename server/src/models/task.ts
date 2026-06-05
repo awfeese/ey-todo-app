@@ -9,10 +9,11 @@ export interface Task {
     priority: number;
 }
 
-export type TaskRequest = Pick<Task, 'task'> & { completed: boolean };
+export type AddTaskRequest = Pick<Task, 'task'>;
+export type UpdateTaskRequest = AddTaskRequest & { completed: boolean };
 
 export const validateTask = (req: Request, res: Response, next: NextFunction) => {
-    const { task, completed } = (req.body ?? {}) as Partial<TaskRequest>;
+    const { task } = (req.body ?? {}) as Partial<AddTaskRequest>;
 
     if (typeof task !== 'string' || task.trim().length === 0) {
         return badRequest(res, 'Task is required.');
@@ -22,11 +23,17 @@ export const validateTask = (req: Request, res: Response, next: NextFunction) =>
         return badRequest(res, 'Task must be 50 characters or fewer.');
     }
 
-    if (completed !== undefined && typeof completed !== 'boolean') {
+    next();
+};
+
+export const validateTaskUpdate = (req: Request, res: Response, next: NextFunction) => {
+    const { completed } = (req.body ?? {}) as Partial<UpdateTaskRequest>;
+
+    if (typeof completed !== 'boolean') {
         return badRequest(res, 'Completed must be a boolean.');
     }
 
-    next();
+    validateTask(req, res, next);
 };
 
 export const validateTaskOrder = (req: Request, res: Response, next: NextFunction) => {

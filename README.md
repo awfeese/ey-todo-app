@@ -80,7 +80,7 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 - `PUT /api/tasks/:id` — update task text and completion status
 - `DELETE /api/tasks/:id` — delete a task
 - `POST /api/tasks/order` — persist a new task ordering in a single transaction
-- Request validation (task length ≤ 50 chars), structured error responses, CORS, and security headers via Helmet
+- Request validation (task length ≤ 50 chars), structured error responses, structured logging via **pino**, CORS, and security headers via Helmet
 
 **Frontend**
 - Login page with form validation and error messaging

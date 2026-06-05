@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
+import { Task } from "../models/task";
 import { getUserId } from "../models/user";
 import taskService from "../services/task-service";
-import { badRequest, serverError, success } from "../utils/response";
-import { Task } from "../models/task";
+import { created, notFound, serverError, success } from "../utils/response";
 
 interface ApiTask {
     id: number;
@@ -36,10 +36,10 @@ const taskController = {
             const userId = getUserId(req);
             const ordered = taskService.orderTasks(userId, req.body);
             if (!ordered) {
-                return badRequest(res, 'Could not update the order of your tasks.');
+                return notFound(res, 'One or more tasks were not found.');
             }
 
-            const tasks = taskService.getTasks(userId, req.query.searchText as string);
+            const tasks = taskService.getTasks(userId);
             return success(res, tasks.map(toApiModel));
         } catch (err) {
             return serverError(res, err);
@@ -51,7 +51,7 @@ const taskController = {
             const userId = getUserId(req);
             const taskId = taskService.addTask(userId, req.body);
             const task = taskService.getTask(userId, taskId);
-            return success(res, toApiModel(task));
+            return created(res, toApiModel(task));
         } catch (err) {
             return serverError(res, err);
         }
@@ -61,7 +61,11 @@ const taskController = {
         try {
             const userId = getUserId(req);
             const task = taskService.getTask(userId, parseInt(req.params.id as string, 10));
-            return success(res, toApiModel(task));
+            if (!task) {
+                return notFound(res);
+            } else {
+                return success(res, toApiModel(task));
+            }
         } catch (err) {
             return serverError(res, err);
         }
@@ -74,7 +78,7 @@ const taskController = {
 
             const updated = taskService.updateTask(userId, taskId, req.body);
             if (!updated) {
-                return badRequest(res, 'Could not update the requested task.');
+                return notFound(res);
             }
 
             const task = taskService.getTask(userId, taskId);
@@ -91,7 +95,7 @@ const taskController = {
 
             const deleted = taskService.deleteTask(userId, taskId);
             if (!deleted) {
-                return badRequest(res, 'Could not delete the requested task.');
+                return notFound(res);
             }
 
             return success(res);

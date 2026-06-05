@@ -43,5 +43,7 @@ __screenshots__/
 Thumbs.db
 
 .angular/
-dist/
+.claude/
+.env
+
 results.json

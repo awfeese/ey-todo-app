@@ -1,0 +1,44 @@
+{
+    // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Dependencies",
+            "type": "shell",
+            "command": "npm install",
+            "presentation": {
+                "close": true
+            }
+        },
+        {
+            "label": "Run Client",
+            "type": "shell",
+            "command": "npx ng serve",
+            "options": {
+                "cwd": "${workspaceFolder}/client"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "dependsOn": ["Install Dependencies"],
+            "presentation": {
+                "group": "start"
+            }
+        },
+        {
+            "label": "Run Server",
+            "type": "shell",
+            "command": "npx tsx src/server.ts",
+            "options": {
+                "cwd": "${workspaceFolder}/server"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "dependsOn": ["Install Dependencies"],
+            "presentation": {
+                "group": "start"
+            }
+        }
+    ]
+}

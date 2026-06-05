@@ -110,6 +110,5 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 - **Rate limiting** — add `express-rate-limit` to the login endpoint to prevent brute-force attacks.
 - **Input sanitization** — add a validation layer (e.g. `zod`) to all request bodies rather than ad-hoc length checks.
 - **Database migrations** — replace the `CREATE TABLE IF NOT EXISTS` bootstrap with a migration tool (e.g. `better-sqlite3-migrations`) so schema changes are versioned and reversible.
-- **Structured logging** — replace `console.*` calls with a logger (e.g. `pino`) that emits JSON for log aggregation.
 - **CI pipeline** — GitHub Actions workflow to run type-checking and tests on every push and pull request.
 - **Cloud deployment** — containerize the server with Docker, push to a registry, and deploy to a managed service (e.g. AWS ECS or Cloud Run) behind a load balancer. The Angular app can be built to static files and served from a CDN (e.g. S3 + CloudFront).

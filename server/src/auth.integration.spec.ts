@@ -80,6 +80,20 @@ describe('POST /api/auth/login', () => {
     });
 });
 
+describe('POST /api/logs', () => {
+    it('accepts a client error report without authentication', async () => {
+        const res = await request(app)
+            .post('/api/logs')
+            .send({ message: 'Boom', stack: 'Error: Boom\n    at bootstrap', source: 'bootstrap' });
+        expect(res.status).toBe(204);
+    });
+
+    it('does not crash on an empty body', async () => {
+        const res = await request(app).post('/api/logs').send({});
+        expect(res.status).toBe(204);
+    });
+});
+
 describe('authentication guard on /api/tasks', () => {
     it('returns 401 when no Authorization header is present', async () => {
         const res = await request(app).get('/api/tasks');

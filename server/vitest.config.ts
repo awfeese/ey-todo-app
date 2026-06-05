@@ -6,6 +6,7 @@ export default defineConfig({
         include: ['src/**/*.spec.ts'],
         env: {
             JWT_SECRET: 'test-secret',
+            LOG_LEVEL: 'silent',
         },
         coverage: {
             provider: 'v8',

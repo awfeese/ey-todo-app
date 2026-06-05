@@ -83,6 +83,7 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 - `PUT /api/tasks/:id` — update task text and completion status
 - `DELETE /api/tasks/:id` — delete a task
 - `POST /api/tasks/order` — persist a new task ordering in a single transaction
+- `POST /api/logs` — records client-side errors (e.g. app bootstrap failures) through the pino logger
 - Request validation (task length ≤ 50 chars), structured error responses, structured logging via **pino**, CORS, and security headers via Helmet
 
 **Frontend**

@@ -44,7 +44,7 @@ Express 5 + TypeScript REST API. No ORM — raw SQL via Node's built-in `node:sq
 
 **Request lifecycle:** `app.ts` mounts all routes under `/api` → `routes/index.ts` aggregates sub-routers → controllers call services → services talk to SQLite directly.
 
-**Auth:** `middleware/auth.ts` verifies a JWT (`Authorization: Bearer <token>`) and sets `req.userId`. Applied per-router, not globally — task routes require it, auth routes do not.
+**Auth:** `middleware/auth.ts` verifies a JWT (`Authorization: Bearer <token>`) and sets `req.userId`. Applied per-router, not globally — task routes require it; auth and log routes do not.
 
 **Response helpers** (`utils/response.ts`): use `success`, `created`, `badRequest`, `notFound`, `unauthorized`, `serverError` instead of calling `res.status(...).json(...)` directly.
 

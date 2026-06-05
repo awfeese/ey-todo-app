@@ -1,10 +1,8 @@
 import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import database from '../config/database';
+import db from '../config/database';
 import { Credentials, User } from '../models/user';
-
-const db = database();
 
 const userService = {
     login: (creds: Credentials): string | null => {

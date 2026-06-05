@@ -45,6 +45,6 @@ Thumbs.db
 .angular/
 .claude/
 .env
-app.db
+app.db*
 
 results.json

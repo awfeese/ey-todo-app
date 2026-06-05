@@ -1,8 +1,6 @@
 import { SQLInputValue } from 'node:sqlite';
-import database from '../config/database';
+import db from '../config/database';
 import { Task, TaskRequest } from '../models/task';
-
-const db = database();
 
 const getNextPriority = (userId: number) => {
     const query = db.prepare('SELECT MAX(priority) AS priority FROM tasks WHERE user_id = ?');

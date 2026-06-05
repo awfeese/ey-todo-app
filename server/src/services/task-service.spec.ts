@@ -23,7 +23,7 @@ const db = vi.hoisted(() => {
     return instance;
 });
 
-vi.mock('../config/database', () => ({ default: () => db }));
+vi.mock('../config/database', () => ({ default: db }));
 
 const USER = 1;
 const OTHER_USER = 2;

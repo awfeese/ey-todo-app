@@ -2,13 +2,11 @@ import { DatabaseSync } from 'node:sqlite';
 import config from './index';
 import crypto from 'node:crypto';
 
-const connectDB = () => {
-    return new DatabaseSync(config.database.path);
-};
+const db = new DatabaseSync(config.database.path);
+db.exec('PRAGMA journal_mode = WAL');
+db.exec('PRAGMA busy_timeout = 5000');
 
 const initSchema = () => {
-    const db = connectDB();
-
     db.prepare(
         `CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
@@ -35,4 +33,4 @@ const initSchema = () => {
 };
 
 export { initSchema };
-export default connectDB;
+export default db;

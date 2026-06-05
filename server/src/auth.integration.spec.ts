@@ -12,7 +12,7 @@ const db = vi.hoisted(() => {
 });
 
 vi.mock('./config/database', () => ({
-    default: () => db,
+    default: db,
     initSchema: () => {},
 }));
 

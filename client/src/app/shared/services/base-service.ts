@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Inject, inject, Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment.development";
+import { environment } from "../../../environments/environment";
 import { catchError, MonoTypeOperatorFunction, of } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
 

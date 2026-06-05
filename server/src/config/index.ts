@@ -14,7 +14,7 @@ export default {
         expiresIn: process.env.JWT_EXPIRES_IN || '7d',
     },
     cors: {
-        origin: process.env.CORS_ORIGIN || '*',
+        origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
         credentials: true,
     },
 };

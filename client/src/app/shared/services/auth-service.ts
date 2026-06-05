@@ -2,14 +2,16 @@ import { computed, Injectable, signal } from "@angular/core";
 import { ApiResponse, BaseService } from "./base-service";
 import { tap } from "rxjs";
 
+const TOKEN_KEY = 'auth_token';
+
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService extends BaseService {
-    private readonly _token = signal('');
+    private readonly _token = signal(localStorage.getItem(TOKEN_KEY) ?? '');
 
     readonly token = this._token.asReadonly();
-    readonly isLoggedIn = computed(() => this._token()?.length > 0);
+    readonly isLoggedIn = computed(() => this._token().length > 0);
 
     constructor() {
         super('auth');
@@ -17,12 +19,21 @@ export class AuthService extends BaseService {
 
     public login(credentials: any) {
         return this._http.post<ApiResponse<any>>(`${this._url}/login`, credentials).pipe(
-            tap(response => this._token.set(response.data?.token ?? '')),
+            tap(response => this._setToken(response.data?.token ?? '')),
             this._handleError()
         );
     }
 
     public logout() {
-        this._token.set('');
+        this._setToken('');
+    }
+
+    private _setToken(token: string): void {
+        this._token.set(token);
+        if (token) {
+            localStorage.setItem(TOKEN_KEY, token);
+        } else {
+            localStorage.removeItem(TOKEN_KEY);
+        }
     }
 }

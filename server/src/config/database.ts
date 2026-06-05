@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import config from './index';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 const connectDB = () => {
     return new DatabaseSync(config.database.path);

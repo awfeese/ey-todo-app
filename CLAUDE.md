@@ -56,7 +56,7 @@ Express 5 + TypeScript REST API. No ORM — raw SQL via Node's built-in `node:sq
 
 Angular 21 SPA with standalone components and Angular Material. No NgModules — components are declared inline with `imports: [...]`.
 
-**Auth flow:** `AuthService` stores the JWT in a signal (`token()`). `authInterceptor` attaches `Authorization: Bearer` to every request and calls `authService.logout()` on any 401. `authGuard` protects the `/tasks` routes.
+**Auth flow:** `AuthService` keeps the JWT in a signal (`token()`) and persists it to `localStorage`, rehydrating on startup so a page refresh keeps the session. `authInterceptor` attaches `Authorization: Bearer` to every request and calls `authService.logout()` on any 401. `authGuard` protects the `/tasks` routes.
 
 **Services:** all extend `BaseService` (`shared/services/base-service.ts`), which provides `_http`, builds the API URL from `environment.apiUrl`, and exposes `_handleError()` (catches HTTP errors and shows a Material snackbar).
 

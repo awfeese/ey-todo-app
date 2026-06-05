@@ -1,0 +1,27 @@
+.mat-mdc-card {
+    margin-bottom: 16px;
+
+    .mat-mdc-card-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        & > :first-child {
+            flex: 1;
+        }
+
+        & > :not(:first-child) {
+            margin-left: 16px;
+        }
+    }
+}
+
+.mat-mdc-list-base {
+    padding: 0;
+}
+.mat-mdc-list-item {
+    padding-left: 0 !important;
+}
+.mat-mdc-list-item-meta {
+    margin-right: 0 !important;
+}

@@ -1,0 +1,18 @@
+@if (isLoggedIn()) {
+    <header>
+        <mat-toolbar>
+            <span>ToDo Application</span>
+            <span class="spacer"></span>
+            <button matIconButton aria-label="User menu" [matMenuTriggerFor]="userMenu">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+        </mat-toolbar>
+        <mat-menu #userMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+    </header>
+}
+
+<main>
+    <router-outlet />
+</main>

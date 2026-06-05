@@ -1,0 +1,21 @@
+header {
+    background-color: var(--mat-sys-primary-container);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .mat-toolbar {
+        background-color: transparent;
+        color: var(--mat-sys-primary);
+        max-width: 800px;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+}
+
+main {
+    max-width: 800px;
+    margin: 16px auto;
+}

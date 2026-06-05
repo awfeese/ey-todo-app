@@ -1,0 +1,29 @@
+:host {
+    display: block;
+    padding-top: 64px;
+}
+
+h3 {
+    margin-top: 0;
+}
+
+.mat-mdc-card {
+    background: url('/login_page.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right;
+    min-height: 300px;
+}
+.mat-mdc-card-header {
+    padding: 16px;
+}
+.mat-mdc-card-actions {
+    margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+    background-color: var(--mat-sys-background);
+    display: block;
+    margin-bottom: 16px;
+    max-width: 350px;
+}

@@ -1,0 +1,53 @@
+<form [formRoot]="searchForm">
+    <mat-card>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Search</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input type="search" matInput [formField]="searchForm.searchText" />
+            </mat-form-field>
+            <button type="button" matButton="tonal" (click)="addTask()">
+                <span>Add Task</span>
+            </button>
+        </mat-card-content>
+    </mat-card>
+</form>
+
+<mat-card>
+    <mat-card-content>
+        <mat-list role="list" cdkDropList (cdkDropListDropped)="orderTasks($event)">
+            @for (task of tasks(); track $index) {
+                <mat-list-item role="listitem" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".mat-mdc-list-base"
+                    [cdkDragData]="task"
+                >
+                    <span matListItemTitle>
+                        <mat-checkbox [checked]="task.completed" (change)="updateTask(task, $event.checked)">
+                            {{ task.task }}
+                        </mat-checkbox>
+                    </span>
+                    <span matListItemMeta>
+                        <button matIconButton aria-label="Example icon button with a menu icon"
+                            [matMenuTriggerFor]="taskMenu" [matMenuTriggerData]="{ task }">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                    </span>
+                </mat-list-item>
+            } @empty {
+                <mat-list-item>
+                    @if (searchForm.searchText().value()) {
+                        <i>There were no matching tasks found.</i>
+                    } @else {
+                        <i>You have not created any tasks yet.</i>
+                    }
+                </mat-list-item>
+            }
+        </mat-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-menu #taskMenu="matMenu">
+    <ng-template matMenuContent let-task="task">
+        <a [routerLink]="task.id" mat-menu-item>Edit</a>
+        <button mat-menu-item (click)="deleteTask(task)">Delete</button>
+    </ng-template>
+</mat-menu>

@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./",
+    },
+    "include": ["**/*.ts"],
+    "exclude": ["dist"],
+    "files": ["./src/server.ts"]
+}

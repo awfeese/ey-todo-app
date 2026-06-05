@@ -11,7 +11,7 @@ npm install
 # Start the backend (runs on port 3000)
 npm run dev:server
 
-# Start the frontend (runs on port 4200, proxies /api to backend)
+# Start the frontend (runs on port 4200, calls the API on port 3000 via CORS)
 npm run dev:client
 
 # Run backend tests only (vitest, unit + integration)
@@ -66,4 +66,4 @@ Angular 21 SPA with standalone components and Angular Material. No NgModules —
 - `/tasks/:id` → `TaskEdit` (guarded, prefetched via `taskResolver`)
 - `**` → redirects to `/tasks`
 
-**Task ordering:** drag-and-drop (Angular CDK) reorders the local array, then calls `POST /api/tasks/order` with the full ordered ID list to persist.
+**Task ordering:** drag-and-drop (Angular CDK) reorders the local array, then calls `PUT /api/tasks/order` with the full ordered ID list to persist.

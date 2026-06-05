@@ -78,19 +78,18 @@ export class TaskList {
     }
 
     public orderTasks(event: CdkDragDrop<Task[]>) {
-        let newTaskList: Task[];
+        const previous = this._tasks.value();
+        if (!previous) {
+            return;
+        }
 
-        this._tasks.update(tasks => {
-            moveItemInArray(tasks!, event.previousIndex, event.currentIndex);
-            newTaskList = [...tasks!];
-            return newTaskList;
-        });
+        const reordered = [...previous];
+        moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+        this._tasks.set(reordered);
 
-        const request = newTaskList!.map(x => x.id);
+        const request = reordered.map(task => task.id);
         this._taskService.orderTasks(request).subscribe(response => {
-            if (response.data) {
-                this._tasks.set(response.data);
-            }
+            this._tasks.set(response.data ?? [...previous]);
         });
     }
 }

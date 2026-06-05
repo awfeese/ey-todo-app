@@ -14,7 +14,7 @@ export interface Credentials {
 }
 
 export const getUserId = (req: Request): number => {
-    return (req as unknown as { userId: number }).userId;
+    return req.userId!;
 };
 
 export const validateLogin = (req: Request, res: Response, next: NextFunction) => {

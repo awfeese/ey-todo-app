@@ -16,7 +16,7 @@
 <mat-card>
     <mat-card-content>
         <mat-list role="list" cdkDropList (cdkDropListDropped)="orderTasks($event)">
-            @for (task of tasks(); track $index) {
+            @for (task of tasks(); track task.id) {
                 <mat-list-item role="listitem" cdkDrag cdkDragLockAxis="y" cdkDragBoundary=".mat-mdc-list-base"
                     [cdkDragData]="task"
                 >
@@ -26,7 +26,7 @@
                         </mat-checkbox>
                     </span>
                     <span matListItemMeta>
-                        <button matIconButton aria-label="Example icon button with a menu icon"
+                        <button matIconButton aria-label="Task actions"
                             [matMenuTriggerFor]="taskMenu" [matMenuTriggerData]="{ task }">
                             <mat-icon>more_vert</mat-icon>
                         </button>

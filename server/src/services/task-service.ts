@@ -5,7 +5,27 @@ import { AddTaskRequest, Task, UpdateTaskRequest } from '../models/task';
 const getNextPriority = (userId: number) => {
     const query = db.prepare('SELECT MAX(priority) AS priority FROM tasks WHERE user_id = ?');
     const { priority } = query.get(userId) as Pick<Task, 'priority'>;
-    return priority == null || isNaN(priority) ? 0 : priority + 1;
+    return priority == null ? 0 : priority + 1;
+};
+
+// A reorder must be a complete permutation of the user's task ids: same length,
+// every id owned by the user, and no duplicates. This prevents a partial list
+// from leaving omitted tasks with colliding priorities.
+const isCompleteOrdering = (provided: number[], existing: number[]): boolean => {
+    if (provided.length !== existing.length) {
+        return false;
+    }
+
+    const existingIds = new Set(existing);
+    const seen = new Set<number>();
+    for (const id of provided) {
+        if (!existingIds.has(id) || seen.has(id)) {
+            return false;
+        }
+        seen.add(id);
+    }
+
+    return true;
 };
 
 const taskService = {
@@ -23,18 +43,20 @@ const taskService = {
         return result;
     },
 
-    orderTasks: (userId: number, taskIds: number[]) => {
+    orderTasks: (userId: number, taskIds: number[]): boolean => {
+        const existingIds = (
+            db.prepare('SELECT id FROM tasks WHERE user_id = ?').all(userId) as unknown as Pick<Task, 'id'>[]
+        ).map(row => row.id);
+
+        if (!isCompleteOrdering(taskIds, existingIds)) {
+            return false;
+        }
+
         try {
             db.exec('BEGIN TRANSACTION');
 
-            for (let priority = 0; priority < taskIds.length; priority++) {
-                const taskId = taskIds[priority];
-                const query = db.prepare('UPDATE tasks SET priority = ? WHERE user_id = ? AND id = ?');
-                const result = query.run(priority, userId, taskId);
-                if (result.changes !== 1) {
-                    throw new Error(`An error while attempting to update task ${taskId}`);
-                }
-            }
+            const update = db.prepare('UPDATE tasks SET priority = ? WHERE user_id = ? AND id = ?');
+            taskIds.forEach((taskId, priority) => update.run(priority, userId, taskId));
 
             db.exec('COMMIT');
             return true;
@@ -55,9 +77,9 @@ const taskService = {
         return result.id;
     },
 
-    getTask: (userId: number, id: number): Task => {
+    getTask: (userId: number, id: number): Task | undefined => {
         const query = db.prepare('SELECT * FROM tasks WHERE user_id = ? AND id = ?');
-        const result = query.get(userId, id) as unknown as Task;
+        const result = query.get(userId, id) as Task | undefined;
         return result;
     },
 

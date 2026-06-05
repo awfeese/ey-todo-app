@@ -206,5 +206,19 @@ describe('TaskList', () => {
 
             expect(component.tasks()?.[0].id).toBe(TASKS[2].id);
         });
+
+        it('rolls back to the previous order when the reorder fails', async () => {
+            const { component, fixture } = await setup({
+                orderTasks: vi.fn().mockReturnValue(of({ error: 'nope' })),
+            });
+            const before = component.tasks()!.map(t => t.id);
+
+            const event = { previousIndex: 0, currentIndex: 2 } as CdkDragDrop<Task[]>;
+            component.orderTasks(event);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(component.tasks()!.map(t => t.id)).toEqual(before);
+        });
     });
 });

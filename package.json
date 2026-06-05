@@ -8,6 +8,9 @@
         "test:server:coverage": "cd server && npx vitest run --coverage",
         "test:client": "cd client && npx ng test --watch=false",
         "test": "npm run test:server && npm run test:client",
+        "typecheck:server": "cd server && npx tsc --noEmit -p tsconfig.json",
+        "typecheck:client": "cd client && npx tsc --noEmit -p tsconfig.app.json",
+        "typecheck": "npm run typecheck:server && npm run typecheck:client",
         "dev:server": "cd server && npx tsx src/server.ts",
         "dev:client": "cd client && npx ng serve"
     },

@@ -1,10 +1,12 @@
 import app from './app';
-import config from './config';
+import config, { assertRequiredConfig } from './config';
 import db, { initSchema } from './config/database';
 import logger from './config/logger';
 
 function start() {
     try {
+        assertRequiredConfig();
+
         initSchema();
         logger.info('Initialized database schema');
 

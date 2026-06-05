@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Task } from "../models/task";
 import { getUserId } from "../models/user";
 import taskService from "../services/task-service";
-import { created, notFound, serverError, success } from "../utils/response";
+import { badRequest, created, notFound, serverError, success } from "../utils/response";
 
 interface ApiTask {
     id: number;
@@ -36,7 +36,7 @@ const taskController = {
             const userId = getUserId(req);
             const ordered = taskService.orderTasks(userId, req.body);
             if (!ordered) {
-                return notFound(res, 'One or more tasks were not found.');
+                return badRequest(res, 'The provided task ids must match your current tasks exactly.');
             }
 
             const tasks = taskService.getTasks(userId);
@@ -51,6 +51,9 @@ const taskController = {
             const userId = getUserId(req);
             const taskId = taskService.addTask(userId, req.body);
             const task = taskService.getTask(userId, taskId);
+            if (!task) {
+                return serverError(res);
+            }
             return created(res, toApiModel(task));
         } catch (err) {
             return serverError(res, err);
@@ -82,6 +85,9 @@ const taskController = {
             }
 
             const task = taskService.getTask(userId, taskId);
+            if (!task) {
+                return serverError(res);
+            }
             return success(res, toApiModel(task));
         } catch (err) {
             return serverError(res, err);

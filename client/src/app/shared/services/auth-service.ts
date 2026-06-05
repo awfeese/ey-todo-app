@@ -4,6 +4,11 @@ import { tap } from "rxjs";
 
 const TOKEN_KEY = 'auth_token';
 
+export interface Credentials {
+    username: string;
+    password: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -17,8 +22,8 @@ export class AuthService extends BaseService {
         super('auth');
     }
 
-    public login(credentials: any) {
-        return this._http.post<ApiResponse<any>>(`${this._url}/login`, credentials).pipe(
+    public login(credentials: Credentials) {
+        return this._http.post<ApiResponse<{ token: string }>>(`${this._url}/login`, credentials).pipe(
             tap(response => this._setToken(response.data?.token ?? '')),
             this._handleError()
         );

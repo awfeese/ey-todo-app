@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MaterialModule } from '../shared';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
-import { AuthService } from '../shared/services/auth-service';
+import { AuthService, Credentials } from '../shared/services/auth-service';
 import { lastValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -40,7 +40,7 @@ export class LoginForm {
                         authForm.password().value.set('');
                         return [{
                             kind: 'server',
-                            message: response.error.message,
+                            message: response.error,
                             fieldTree: authForm.password
                         }];
                     }
@@ -56,7 +56,7 @@ export class LoginForm {
         this._showPassword.update(value => !value);
     }
 
-    private async _login(credentials: any) {
+    private async _login(credentials: Credentials) {
         const response$ = this._authService.login(credentials);
         const response = await lastValueFrom(response$);
         return response;

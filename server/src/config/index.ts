@@ -1,11 +1,20 @@
 import path from 'node:path';
-import { config } from 'dotenv';
+import { config as loadEnv } from 'dotenv';
 
-config({
-    path: path.resolve(__dirname, '../../../.env')
+loadEnv({
+    path: path.resolve(__dirname, '../../../.env'),
+    quiet: true,
 });
 
-export default {
+const assertRequiredConfig = () => {
+    if (!config.jwt.secret) {
+        throw new Error(
+            'JWT_SECRET is not set. Copy .env.example to .env and set JWT_SECRET before starting the server.',
+        );
+    }
+};
+
+const config = {
     port: process.env.PORT || 3000,
     logLevel: process.env.LOG_LEVEL || 'info',
     database: {
@@ -20,3 +29,6 @@ export default {
         credentials: true,
     },
 };
+
+export { assertRequiredConfig };
+export default config;

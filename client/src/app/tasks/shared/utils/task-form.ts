@@ -23,7 +23,7 @@ export const taskForm = (
                     if (response.error) {
                         return [{
                             kind: 'server',
-                            message: response.error.message,
+                            message: response.error,
                             fieldTree: fieldTree.task
                         }];
                     }

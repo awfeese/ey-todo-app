@@ -41,7 +41,7 @@ The server starts on port 3000, auto-creates the SQLite database, and seeds a de
 cd client && npx ng serve
 ```
 
-Open [http://localhost:4200](http://localhost:4200) in a browser. The dev server proxies all `/api` requests to the backend automatically.
+Open [http://localhost:4200](http://localhost:4200) in a browser. The client calls the API at `http://localhost:3000` directly — the backend enables CORS for the `http://localhost:4200` origin, so no proxy is required.
 
 ---
 
@@ -82,7 +82,7 @@ The monorepo shares a single `package.json` at the root for dependency managemen
 - `GET /api/tasks/:id` — fetch a single task
 - `PUT /api/tasks/:id` — update task text and completion status
 - `DELETE /api/tasks/:id` — delete a task
-- `POST /api/tasks/order` — persist a new task ordering in a single transaction
+- `PUT /api/tasks/order` — persist a new task ordering in a single transaction
 - `POST /api/logs` — records client-side errors (e.g. app bootstrap failures) through the pino logger
 - Request validation (task length ≤ 50 chars), structured error responses, structured logging via **pino**, CORS, and security headers via Helmet
 

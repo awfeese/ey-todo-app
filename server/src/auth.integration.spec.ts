@@ -62,11 +62,13 @@ describe('POST /api/auth/login', () => {
         const res = await login(USERNAME, 'wrong-password');
         expect(res.status).toBe(401);
         expect(res.body.data).toBeUndefined();
+        expect(res.body.error).toBe('Invalid username or password.');
     });
 
-    it('returns 401 for an unknown user', async () => {
+    it('returns 401 with the same message for an unknown user', async () => {
         const res = await login('nobody', PASSWORD);
         expect(res.status).toBe(401);
+        expect(res.body.error).toBe('Invalid username or password.');
     });
 
     it('returns 400 when the password is missing', async () => {
@@ -172,13 +174,52 @@ describe('authenticated task lifecycle', () => {
         expect(res.status).toBe(404);
     });
 
-    it('returns 404 when reordering with an unknown task id', async () => {
+    it('reorders the full task list and returns the new order', async () => {
+        const a = await auth(request(app).post('/api/tasks')).send({ task: 'A' });
+        const b = await auth(request(app).post('/api/tasks')).send({ task: 'B' });
+        const res = await auth(request(app).put('/api/tasks/order')).send([b.body.data.id, a.body.data.id]);
+        expect(res.status).toBe(200);
+        expect(res.body.data.map((t: { task: string }) => t.task)).toEqual(['B', 'A']);
+    });
+
+    it('returns 400 when reordering with an unknown task id', async () => {
         const res = await auth(request(app).put('/api/tasks/order')).send([99999]);
-        expect(res.status).toBe(404);
+        expect(res.status).toBe(400);
+    });
+
+    it('returns 400 when reordering with a partial list of ids', async () => {
+        const a = await auth(request(app).post('/api/tasks')).send({ task: 'A' });
+        await auth(request(app).post('/api/tasks')).send({ task: 'B' });
+        const res = await auth(request(app).put('/api/tasks/order')).send([a.body.data.id]);
+        expect(res.status).toBe(400);
+    });
+
+    it('returns 400 when reordering with duplicate ids', async () => {
+        const a = await auth(request(app).post('/api/tasks')).send({ task: 'A' });
+        await auth(request(app).post('/api/tasks')).send({ task: 'B' });
+        const res = await auth(request(app).put('/api/tasks/order')).send([a.body.data.id, a.body.data.id]);
+        expect(res.status).toBe(400);
     });
 
     it('returns 400 when reordering with a non-array payload', async () => {
         const res = await auth(request(app).put('/api/tasks/order')).send({ not: 'an array' });
         expect(res.status).toBe(400);
+    });
+});
+
+describe('error handling', () => {
+    it('returns a 400 JSON envelope for a malformed JSON body', async () => {
+        const res = await request(app)
+            .post('/api/auth/login')
+            .set('Content-Type', 'application/json')
+            .send('{ "username": ');
+        expect(res.status).toBe(400);
+        expect(typeof res.body.error).toBe('string');
+    });
+
+    it('returns a 404 JSON envelope for an unknown route', async () => {
+        const res = await request(app).get('/api/does-not-exist');
+        expect(res.status).toBe(404);
+        expect(typeof res.body.error).toBe('string');
     });
 });

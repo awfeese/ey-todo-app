@@ -7,10 +7,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 
 export interface ApiResponse<T = unknown> {
     data?: T;
-    error?: {
-        code: string;
-        message: string;
-    };
+    error?: string;
 }
 
 @Injectable()
@@ -27,8 +24,9 @@ export abstract class BaseService {
         return response$ =>
             response$.pipe(
                 catchError((res: HttpErrorResponse) => {
-                    this._toastMessage(res.error?.error || `The requested action can't be completed due to an unexpected issue.`);
-                    return of(res);
+                    const message = res.error?.error || `The requested action can't be completed due to an unexpected issue.`;
+                    this._toastMessage(message);
+                    return of<ApiResponse<T>>({ error: message });
                 })
             );
     }
